@@ -17,7 +17,7 @@ export async function POST(request) {
     
     return Response.json({ 
       signature,
-      uploadPreset: "bpa_unsigned", // ✅ Just return it, don't configure it here
+      uploadPreset: "bpa_unsigned",
       apiKey: process.env.CLOUDINARY_API_KEY,
       cloudName: process.env.CLOUDINARY_CLOUD_NAME,
       timestamp: paramsToSign.timestamp
