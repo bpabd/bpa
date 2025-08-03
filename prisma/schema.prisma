@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  role          Role      @default(MEMBER)
+  resetToken    String?
+  resetTokenExpiry DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  memberProfile Member?
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model Member {
+  id            String     @id @default(uuid())
+  userId        String     @unique
+  user          User       @relation(fields: [userId], references: [id])
+  fullName      String
+  bio           String?
+  dob           DateTime?
+  workplace     String?
+  bloodGroup    String?
+  memberSince   DateTime?  @default(now())
+  memberId      String?    @unique
+  region        String?
+  profileImage  String?
+  facebookUrl   String?
+  linkedinUrl   String?
+  contactNumber String?
+  workTypes     String[]
+  works         Work[]
+  isApproved    Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+}
+
+model Work {
+  id            String   @id @default(uuid())
+  title         String
+  description   String?
+  videoUrl      String?
+  imageUrl      String?
+  isFeatured    Boolean  @default(false)
+  memberId      String
+  member        Member   @relation(fields: [memberId], references: [id])
+}
+
+model Content {
+  id        String   @id @default(uuid())
+  title     String
+  body      String
+  type      ContentType
+  createdAt DateTime @default(now())
+}
+
+enum ContentType {
+  NEWS
+  EVENT
+  NOTICE
+}
